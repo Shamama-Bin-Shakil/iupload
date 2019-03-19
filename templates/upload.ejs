@@ -7,7 +7,7 @@
         <h2>Upload Your Image</h2>
       </div>
       <div class="preview-image-container">
-        
+
         <!-- Progress Bar -->
         <div class="progress-bar" id="progressBar">
           <div class="progress-bar-fill">
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  
+
 
   <!-- Include Footer File -->
   <%- include("./partials/footer.ejs") %>
@@ -108,21 +108,25 @@
         for (const file of inpFile.files) {
           formData.append("myFiles", file);
         }
+        if (inpFile.files.length === 1) {
+          
+          const response = await fetch("/api/uploadimage", {
+            method: "POST",
+            headers: { "auth-token": sessionStorage.getItem("auth-token") },
+            body: formData,
+          });
+          const result = await response.json();
+          if (result) { 
+            alertSuccess("Image Upload Successfully");
+            previewImage.removeAttribute("src", "");
+            previewImage.style.display = "none";
+            custom_btn.style.display = "flex";
+            uploadIcon.style.display = "flex";
+            supportTypeImage.style.display = "flex";
+          }
 
-        const response = await fetch("/api/uploadimage", {
-          method: "POST",
-          headers: { "auth-token": sessionStorage.getItem("auth-token") },
-          body: formData,
-        });
-        const result = await response.json();
-        console.log(result);
-        if (result) {
-          alertSuccess("Image Upload Successfully");
-          previewImage.removeAttribute("src", "");
-          previewImage.style.display = "none";
-          custom_btn.style.display = "flex";
-          uploadIcon.style.display = "flex";
-          supportTypeImage.style.display = "flex";
+        }else {
+          alertError("Select Image");
         }
       }
     </script>
