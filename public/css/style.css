@@ -1117,6 +1117,36 @@ main .left-side h1 {
   margin-top: 15px;
 }
 
+/* Progress Bar */
+.progress-bar {
+  height: 35px;
+  width: 250px;
+  border: 2px solid #004dff;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  overflow: hidden;
+  display: none;
+}
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: lightblue;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+}
+.progress-bar-text {
+  margin-left: 10px;
+  font-weight: bold;
+}
 
 /* =========================================================================
 ====== API_KEY STYLE

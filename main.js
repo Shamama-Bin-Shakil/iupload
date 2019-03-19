@@ -8,8 +8,6 @@ const connectDB = require('./server/db/db');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// DB_URL=mongodb+srv://Shamama:KKZfXA2CTd9fTgAG@cluster0.cb9sllr.mongodb.net/images
-
 // Connection mongoDB
 connectDB();
 

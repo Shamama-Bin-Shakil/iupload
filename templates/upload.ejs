@@ -1,6 +1,5 @@
 <!-- Include Header File -->
 <%- include("./partials/header.ejs") %>
-
   <!-- Upload Center Image -->
   <div class="container">
     <div class="upload-container">
@@ -8,6 +7,14 @@
         <h2>Upload Your Image</h2>
       </div>
       <div class="preview-image-container">
+        
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-bar-fill">
+            <span class="progress-bar-text">0%</span>
+          </div>
+        </div>
+
         <input type="file" id="inpFile" hidden />
         <span class="upload-icon" id="uploadIcon">
           <ion-icon name="cloud-upload-outline"></ion-icon>
@@ -18,12 +25,16 @@
           <img src="" alt="image Preview" class="image-preview__image" />
           <span class="imageClose" id="imageClose">+</span>
         </div>
+
       </div>
       <div class="upload-button">
         <button type="button" class="style-btn" id="upload-start-btn">Upload Start</button>
       </div>
     </div>
   </div>
+
+  
+
   <!-- Include Footer File -->
   <%- include("./partials/footer.ejs") %>
 
@@ -41,6 +52,12 @@
       const supportTypeImage = document.getElementById("supportTypeImage");
       const imageClose = document.getElementById("imageClose");
 
+      const progressBar = document.getElementById("progressBar");
+      const progressBarFill = document.querySelector('.progress-bar-fill');
+      const progressBarText = document.querySelector('.progress-bar-text');
+      const uploadBtn = document.getElementById("upload-start-btn")
+
+
       inpFile.addEventListener("change", function () {
         const file = this.files[0];
         if (file.type === "image/jpg" || file.type === "image/jpeg" || file.type === "image/png") {
@@ -51,7 +68,19 @@
             uploadIcon.style.display = "none";
             supportTypeImage.style.display = "none";
 
+            reader.addEventListener("progress", function (e) {
+              const percent = e.lengthComputable ? (e.loaded / e.total) * 100 : 0;
+              uploadBtn.innerHTML = "Loading " + percent.toFixed(2) + "%";
+              // progressBar.style.display = "flex";
+              // progressBarFill.style.width = percent.toFixed(2) + "%";
+              // progressBarText.textContent = percent.toFixed(2) + "%";
+            });
+
             reader.addEventListener("load", function () {
+              setTimeout(() => {
+                document.getElementById("upload-start-btn").innerHTML = "Upload Start";
+              }, 3000);
+
               previewImage.setAttribute("src", this.result);
             });
 
@@ -86,6 +115,7 @@
           body: formData,
         });
         const result = await response.json();
+        console.log(result);
         if (result) {
           alertSuccess("Image Upload Successfully");
           previewImage.removeAttribute("src", "");
