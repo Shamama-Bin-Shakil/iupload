@@ -1,0 +1,44 @@
+<!-- Include Header File -->
+<%- include("./partials/header.ejs") %>
+
+    <div class="container">
+        <div class="main_api_key">
+            <h2>This URL Hit And Get Data</h2><br>
+
+            <div class="apikey_input">
+                <input type="text" id="apiValue" readonly>
+                <button type="button" id="btn-clipboard" onclick="apikey_value()" class="primary-btn">Copy</button>
+            </div>
+            <% if (user) { %>
+            <small>Your API Key: <%= API_KEY %></small>
+            <% } %>
+
+        </div>
+    </div>
+ 
+<!-- Include Footer File -->
+<%- include("./partials/footer.ejs") %>
+
+
+<script type="text/javascript">
+	let currentURL = location.href;
+	let apiValue = document.getElementById("apiValue");
+	apiValue.value = currentURL + "/apikey/Your_API_KEY";
+</script>
+
+<script>
+    function apikey_value() {
+        let val = document.getElementById("apiValue");
+        let clipboard = val.value;
+
+        val.select();
+        
+        navigator.clipboard.writeText(clipboard).then(() => {
+            document.getElementById("btn-clipboard").innerHTML = "Copied";
+        });
+        setTimeout(() => {
+            document.getElementById("btn-clipboard").innerHTML = "Copy";
+        }, 4000);
+    }
+
+</script>

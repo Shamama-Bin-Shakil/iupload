@@ -1,0 +1,34 @@
+<!-- Include Header File -->
+<%- include("./partials/header.ejs") %>
+
+    <div class="container">
+        <div class="main_api_key">
+            <h2>Your API Key</h2><br>
+
+            <div class="apikey_input">
+                <input type="text" id="apikey" value="<%= API_KEY %>" readonly>
+                <button type="button" id="btn-clipboard" onclick="apikey_value()" class="primary-btn">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Footer File -->
+    <%- include("./partials/footer.ejs") %>
+
+        <!-- Copy Clipboard in API KEY -->
+        <script>
+            function apikey_value() {
+                let val = document.getElementById("apikey");
+                let clipboard = val.value;
+                
+                val.select();
+
+                navigator.clipboard.writeText(clipboard).then(() => {
+                    document.getElementById("btn-clipboard").innerHTML = "Copied";
+                });
+
+                setTimeout(() => {
+                    document.getElementById("btn-clipboard").innerHTML = "Copy";
+                }, 4000);
+            }
+        </script>
