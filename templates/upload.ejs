@@ -28,7 +28,7 @@
 
       </div>
       <div class="upload-button">
-        <button type="button" class="style-btn" id="upload-start-btn">Upload Start</button>
+        <button type="button" class="style-btn" id="upload-start-btn" disabled>Upload Start</button>
       </div>
     </div>
   </div>
@@ -70,16 +70,13 @@
 
             reader.addEventListener("progress", function (e) {
               const percent = e.lengthComputable ? (e.loaded / e.total) * 100 : 0;
-              uploadBtn.innerHTML = "Loading " + percent.toFixed(2) + "%";
-              // progressBar.style.display = "flex";
-              // progressBarFill.style.width = percent.toFixed(2) + "%";
-              // progressBarText.textContent = percent.toFixed(2) + "%";
+              uploadBtn.textContent = "Loading " + percent.toFixed(2) + "%";
             });
 
             reader.addEventListener("load", function () {
-              setTimeout(() => {
-                document.getElementById("upload-start-btn").innerHTML = "Upload Start";
-              }, 3000);
+
+              uploadBtn.textContent = "Upload Start";
+              uploadBtn.removeAttribute("disabled", "disabled");
 
               previewImage.setAttribute("src", this.result);
             });
@@ -102,30 +99,38 @@
       const upload_start_btn = document.getElementById("upload-start-btn");
       upload_start_btn.addEventListener("click", uploadStart);
 
-      async function uploadStart(e) {
+      function uploadStart(e) {
         const formData = new FormData();
 
         for (const file of inpFile.files) {
           formData.append("myFiles", file);
         }
         if (inpFile.files.length === 1) {
-          
-          const response = await fetch("/api/uploadimage", {
-            method: "POST",
-            headers: { "auth-token": sessionStorage.getItem("auth-token") },
-            body: formData,
-          });
-          const result = await response.json();
-          if (result) { 
-            alertSuccess("Image Upload Successfully");
-            previewImage.removeAttribute("src", "");
-            previewImage.style.display = "none";
-            custom_btn.style.display = "flex";
-            uploadIcon.style.display = "flex";
-            supportTypeImage.style.display = "flex";
-          }
 
-        }else {
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", "/api/uploadimage");
+          xhr.setRequestHeader("auth-token", sessionStorage.getItem("auth-token"));
+
+          xhr.upload.addEventListener("progress", function (e) {
+            const percent = e.lengthComputable ? (e.loaded / e.total) * 100 : 0;
+            uploadBtn.textContent = "Loading " + percent.toFixed(2) + "%";
+          });
+
+          xhr.onload = () => {
+            document.getElementById("upload-start-btn").innerHTML = "Upload Start";
+            if (xhr.response) {
+              uploadBtn.setAttribute("disabled", "disabled");
+              alertSuccess("Image Upload Successfully");
+              previewImage.removeAttribute("src", "");
+              previewImage.style.display = "none";
+              custom_btn.style.display = "flex";
+              uploadIcon.style.display = "flex";
+              supportTypeImage.style.display = "flex";
+            }
+          }
+          xhr.send(formData);
+
+        } else {
           alertError("Select Image");
         }
       }
